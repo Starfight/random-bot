@@ -16,12 +16,23 @@ def main(args):
     parser.add_option("-w", "--word", type="string", dest="word", help="A word or url to start")
     (options, _) = parser.parse_args()
 
+    # verify option
+    if options.nb <= 0:
+        print "Option --number need to be positive"
+        return 1
+
+    while not options.word:
+        options.word = raw_input("Enter something: ")
+
     bot = Bot()
     word = options.word
     for i in range(0, options.nb):
-        word = bot.pick_link_from(word)
+        word = bot.pick_link_from(word, bot.is_url(options.word))
+        if not word:
+            break
 
-    print "Here we are: %s" % word
+    if word:
+        print "Here we are: %s" % bot.last_url
 
 if __name__ == "__main__":
     sys.exit(main(sys.argv[1:]))
